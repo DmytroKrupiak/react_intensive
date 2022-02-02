@@ -1,9 +1,4 @@
-import React, {Component} from 'react'
-class Header extends Component {
-
-render(){
-    return <h2>{this.props.title}</h2>
-}   
-}
-
-export default Header
+const Header = (props) => {
+  return <h2>{props.title}</h2>;
+};
+export default Header;

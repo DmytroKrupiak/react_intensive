@@ -1,18 +1,22 @@
-import React, {Component} from 'react';
+import { useContext } from 'react';
+import Context from '../lib/Context';
 
-
-
-class Buttons extends Component {
-    render(){
-        return (
-            <div className='btns'>
-                <button  type='reset'  onClick = {(e)=>this.props.handleReset(e)}>Отмена</button>
-                <button className='green' type='submit' onClick={(e)=>this.props.handleSubmit(e)}>Сохранить</button>
-            </div>
-        )
-    }
-}
-
-
+const Buttons = () => {
+  const value = useContext(Context);
+  return (
+    <div className='btns'>
+      <button type='reset' onClick={() => value.handleReset()}>
+        Отмена
+      </button>
+      <button
+        className='green'
+        type='submit'
+        onClick={(e) => value.handleSubmit(e)}
+      >
+        Сохранить
+      </button>
+    </div>
+  );
+};
 
 export default Buttons;

@@ -1,182 +1,129 @@
+import React, { useEffect, useReducer, useState } from 'react';
 import Form from './components/Form';
 import Header from './components/Header';
-import './App.css';
 import Data from './components/Data';
-import { Component } from 'react';
+import Context from './lib/Context';
+import {
+  initialState,
+  formsReducer,
+  phoneMask,
+  validateInput,
+  init,
+} from './lib/utils';
+import './App.css';
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      title: 'Создание анкеты',
-      name: '',
-      surname: '',
-      dateOfBirth: '',
-      phone: '',
-      site: '',
-      info: '',
-      technologies: '',
-      lastProject: '',
-      submit: false,
-      errors: {},
-    };
-  }
+const App = () => {
+  const [title, setTitle] = useState('');
+  const [formState, dispatch] = useReducer(formsReducer, initialState, init);
 
-  validateInputs = (e) => {
-    const { name, value } = e.target;
-    const valid = () => {
-      this.setState((prev) => {
-        return {
-          ...prev,
-          [name]: value.trim(),
-          errors: {
-            ...this.state.errors,
-            [name]: '',
-          },
-        };
-      });
-    };
+  const handleChange = (name, value, dispatch, formState, e) => {
+    if (name === 'phone') {
+      e.target.value = phoneMask(e.target.value);
+    }
+    const { hasError, error } = validateInput(name, value);
+    let isFormValid = false;
 
-    if (value === '') {
-      this.setState({
-        ...this.state,
-        errors: {
-          ...this.state.errors,
-          [name]: 'Поле обязательно для заполнения',
-        },
-      });
-    } else {
-      valid();
-      if (name === 'name' || name === 'surname') {
-        if (value[0] !== value[0].toUpperCase()) {
-          this.setState({
-            ...this.state,
-            errors: {
-              ...this.state.errors,
-              [name]: 'Первая буква должна быть заглавной',
-            },
-          });
-        } else {
-          valid();
-        }
-      }
-      if (name === 'site') {
-        if (!/^https\/\//.test(value)) {
-          this.setState({
-            ...this.state,
-            errors: {
-              ...this.state.errors,
-              [name]: 'Сайт должен начинаться с https//',
-            },
-          });
-        } else {
-          valid();
-        }
-      }
-      if (name === 'phone') {
-        const a = e.target.value
-          .replace(/\D/g, '')
-          .match(/(\d{1})(\d{0,4})(\d{0,2})(\d{0,2})/);
-        e.target.value = !a[2]
-          ? a[1]
-          : a[1] +
-            '-' +
-            a[2] +
-            (a[3] ? '-' + a[3] : '') +
-            (a[4] ? '-' + a[4] : '');
-        if (e.target.value.length < 12) {
-          this.setState({
-            ...this.state,
-            errors: {
-              ...this.state.errors,
-              [name]: 'Номер не соответствует формату 7-7777-77-77',
-            },
-          });
-        } else {
-          this.setState({
-            ...this.state,
-            errors: {
-              ...this.state.errors,
-              [name]: '',
-            },
-            [name]: e.target.value,
-          });
-        }
+    for (const key in formState) {
+      const item = formState[key];
+      if (key === name && hasError) {
+        isFormValid = false;
+        break;
+      } else if (key !== name && item.hasError) {
+        isFormValid = false;
+        break;
       }
     }
-  };
-
-  handleChange = (e) => {
-    this.validateInputs(e);
-  };
-
-  handleReset = (e) => {
-    this.setState({
-      name: '',
-      surname: '',
-      dateOfBirth: '',
-      phone: '',
-      site: '',
-      info: '',
-      technologies: '',
-      lastProject: '',
-      errors: {},
-      submit: false,
+    dispatch({
+      type: 'change',
+      data: {
+        name,
+        value,
+        hasError,
+        error,
+        touched: false,
+        isFormValid,
+      },
     });
   };
 
-  handleSubmit = (e) => {
+  const handleFocus = (name, value, dispatch, formState) => {
+    const { hasError, error } = validateInput(name, value);
+    let isFormValid = true;
+    for (const key in formState) {
+      const item = formState[key];
+      if (key === name && hasError) {
+        isFormValid = false;
+        break;
+      } else if (key !== name && item.hasError) {
+        isFormValid = false;
+        break;
+      }
+    }
+
+    dispatch({
+      type: 'change',
+      data: { name, value, hasError, error, touched: true, isFormValid },
+    });
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    const keys = Object.keys(this.state);
+    let isFormValid = true;
 
-    for (let key of keys) {
-      if (this.state[key] === '') {
-        this.setState((prev) => {
-          return {
-            ...prev,
-            errors: {
-              ...prev.errors,
-              [key]: 'Поле обязательно для заполнения',
-            },
-          };
+    for (const name in formState) {
+      const item = formState[name];
+      const { value } = item;
+      const { hasError, error } = validateInput(name, value);
+
+      if (hasError) {
+        isFormValid = false;
+      }
+      if (name) {
+        dispatch({
+          type: 'change',
+          data: {
+            name,
+            value,
+            hasError,
+            error,
+            touched: true,
+            isFormValid,
+          },
         });
       }
     }
-    if (
-      this.state.name !== '' &&
-      this.state.surname !== '' &&
-      this.state.phone !== '' &&
-      this.state.dateOfBirth !== '' &&
-      this.state.site !== '' &&
-      this.state.info !== '' &&
-      this.state.technologies !== '' &&
-      this.state.lastProject !== ''
-    ) {
-      this.setState({
-        ...this.state,
-        title: 'Ваша анкета',
-        submit: true,
-      });
-    }
   };
 
-  render() {
-    return (
-      <div className='App'>
-        <Header title={this.state.title} />
-        {this.state.submit === false && (
-          <Form
-            state={this.state}
-            handleChange={this.handleChange}
-            handleReset={this.handleReset}
-            handleSubmit={this.handleSubmit}
-          />
-        )}
-        {this.state.submit && <Data state={this.state} />}
-      </div>
-    );
-  }
-}
+  const handleReset = () => {
+    dispatch({
+      type: 'reset',
+    });
+  };
+
+  const value = {
+    formState,
+    handleChange,
+    handleFocus,
+    dispatch,
+    handleReset,
+    handleSubmit,
+  };
+
+  useEffect(() => {
+    if (formState.isFormValid) setTitle('Ваша анкета');
+    else setTitle('Создание анкеты');
+  }, [formState.isFormValid]);
+
+  return (
+    <div className='App'>
+      <Header title={title} />
+      <Context.Provider value={value}>
+        {!formState.isFormValid && <Form />}
+        {formState.isFormValid && <Data formState={formState} />}
+      </Context.Provider>
+    </div>
+  );
+};
 
 export default App;

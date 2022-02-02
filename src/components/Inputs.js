@@ -1,7 +1,12 @@
-import { Component } from 'react';
+import React, { useContext } from 'react';
+import Context from '../lib/Context';
 
-class Inputs extends Component {
-  render() {
+
+
+const Inputs = () => {
+   
+  const value = useContext(Context)
+
     return (
       <>
         <label className='input'>
@@ -10,9 +15,12 @@ class Inputs extends Component {
             name='name'
             type='text'
             placeholder='Имя'
-            onChange={(e) => this.props.handleChange(e)}
+            onChange={(e) => value.handleChange('name',e.target.value,value.dispatch,value.formState)}
+            onBlur =  {(e)=> value.handleFocus('name', e.target.value, value.dispatch, value.formState)}
           />
-           <p>{this.props.state.errors.name}</p>
+        {value.formState.name.hasError && (
+            <p>{value.formState.name.error}</p>
+          )}
         </label>
         <label className='input'>
           {' Фамилия:*'}
@@ -20,18 +28,23 @@ class Inputs extends Component {
             name='surname'
             type='text'
             placeholder='Фамилия'
-            onChange={(e) => this.props.handleChange(e)}
+            onChange={(e) => value.handleChange('surname',e.target.value,value.dispatch,value.formState)}
+            onBlur =  {(e)=> value.handleFocus('surname', e.target.value, value.dispatch, value.formState)}
           />
-          <p>{this.props.state.errors.surname}</p>
+            {value.formState.surname.hasError && (
+            <p>{value.formState.surname.error}</p>
+          )}
         </label>
         <label className='input'>
           {'Дата рождения:*'}
           <input
             name='dateOfBirth'
             type='date'
-            onChange={(e) => this.props.handleChange(e)}
+            onChange={(e) => value.handleChange('dateOfBirth',e.target.value,value.dispatch,value.formState)}
+            onBlur =  {(e)=> value.handleFocus('dateOfBirth', e.target.value, value.dispatch, value.formState)}
           />
-          <p>{this.props.state.errors.dateOfBirth}</p>
+            {value.formState.dateOfBirth.hasError && (
+            <p>{value.formState.dateOfBirth.error}</p>)}
         </label>
         <label className='input'>
           {'Телефон:*'}
@@ -39,24 +52,29 @@ class Inputs extends Component {
             name='phone'
             type='tel'
             placeholder='7-7777-77-77'
-            maxLength='13'
-            onChange={(e) => this.props.handleChange(e)}
+            maxLength='12'
+            onChange={(e) => value.handleChange('phone',e.target.value,value.dispatch,value.formState,e)}
+            onBlur =  {(e)=> value.handleFocus('phone', e.target.value, value.dispatch, value.formState)}
           />
-          <p>{this.props.state.errors.phone}</p>
+            {value.formState.phone.hasError && (
+            <p>{value.formState.phone.error}</p>
+          )}
         </label>
         <label className='input'>
           {'Сайт:*'}
           <input
             name='site'
             type='text'
-            placeholder='https//'
-            onChange={(e) => this.props.handleChange(e)}
+            placeholder='https://'
+            onChange={(e) => value.handleChange('site',e.target.value,value.dispatch,value.formState)}
+            onBlur =  {(e)=> value.handleFocus('site', e.target.value, value.dispatch, value.formState)}
           />
-          <p>{this.props.state.errors.site}</p>
+            {value.formState.site.hasError && (
+            <p>{value.formState.site.error}</p>)}
         </label>
       </>
     );
-  }
+
 }
 
 export default Inputs;

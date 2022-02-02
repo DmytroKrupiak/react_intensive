@@ -1,65 +1,120 @@
-import { Component } from 'react';
+import { useContext, useRef } from 'react';
+import Context from '../lib/Context';
 
-class Textareas extends Component {
-  render() {
-    return (
-      <>
-        <label className='textarea'>
-          {'О себе:*'}
-          <textarea
-            name='info'
-            placeholder='О себе*'
-            onChange={(e) => this.props.handleChange(e)}
-          />
-          <p>{this.props.state.errors.info}</p>
-          {this.props.state.info !== '' &&
-            this.props.state.info.length <= 600 && (
-              <p>Осталось {600 - this.props.state.info.length} символов</p>
-            )}
-          {this.props.state.info.length > 600 && (
-            <p>Превышен лимит символов в поле</p>
+const Textareas = () => {
+  const value = useContext(Context);
+  const infoRef = useRef();
+  const technologiesRef = useRef();
+  const lastProjectRef = useRef();
+
+  return (
+    <>
+      <label className='textarea'>
+        {'О себе:*'}
+        <textarea
+          name='info'
+          ref={infoRef}
+          placeholder='О себе*'
+          onChange={(e) =>
+            value.handleChange(
+              'info',
+              e.target.value,
+              value.dispatch,
+              value.formState
+            )
+          }
+          onBlur={(e) =>
+            value.handleFocus(
+              'info',
+              e.target.value,
+              value.dispatch,
+              value.formState
+            )
+          }
+        />
+        {value.formState.info.hasError && <p>{value.formState.info.error}</p>}
+        {infoRef.current?.value !== '' &&
+          infoRef.current?.value.length <= 600 && (
+            <p>Осталось {600 - infoRef.current?.value.length} символов</p>
           )}
-        </label>
-        <label className='textarea'>
-          {'Стек технологий:*'}
-          <textarea
-            name='technologies'
-            placeholder='Опишите ваш стек технологий'
-            onChange={(e) => this.props.handleChange(e)}
-          />
-          <p>{this.props.state.errors.technologies}</p>
-          {this.props.state.technologies !== '' &&
-            this.props.state.technologies.length <= 600 && (
-              <p>
-                Осталось {600 - this.props.state.technologies.length} символов
-              </p>
-            )}
-          {this.props.state.technologies.length > 600 && (
-            <p>Превышен лимит символов в поле</p>
+        {infoRef.current?.value.length > 600 && (
+          <p>Превышен лимит символов в поле</p>
+        )}
+      </label>
+      <label className='textarea'>
+        {'Стек технологий:*'}
+        <textarea
+          name='technologies'
+          ref={technologiesRef}
+          placeholder='Опишите ваш стек технологий'
+          onChange={(e) =>
+            value.handleChange(
+              'technologies',
+              e.target.value,
+              value.dispatch,
+              value.formState
+            )
+          }
+          onBlur={(e) =>
+            value.handleFocus(
+              'technologies',
+              e.target.value,
+              value.dispatch,
+              value.formState
+            )
+          }
+        />
+        {value.formState.technologies.hasError && (
+          <p>{value.formState.technologies.error}</p>
+        )}
+        {technologiesRef.current?.value !== '' &&
+          technologiesRef.current?.value.length <= 600 && (
+            <p>
+              Осталось {600 - technologiesRef.current?.value.length} символов
+            </p>
           )}
-        </label>
-        <label>
-          {'Описание последнего проекта:*'}
-          <textarea
-            name='lastProject'
-            placeholder='Проект'
-            onChange={(e) => this.props.handleChange(e)}
-          />
-          <p>{this.props.state.errors.lastProject}</p>
-          {this.props.state.lastProject !== '' &&
-            this.props.state.lastProject.length <= 600 &&
-            600 - this.props.state.lastProject.length !== 0 && (
-              <p>
-                Осталось {600 - this.props.state.lastProject.length} символов
-              </p>
-            )}
-          {this.props.state.lastProject.length > 600 && (
-            <p>Превышен лимит символов в поле</p>
+        {technologiesRef.current?.value.length > 600 && (
+          <p>Превышен лимит символов в поле</p>
+        )}
+      </label>
+      <label>
+        {'Описание последнего проекта:*'}
+        <textarea
+          name='lastProject'
+          ref={lastProjectRef}
+          placeholder='Проект'
+          onChange={(e) =>
+            value.handleChange(
+              'lastProject',
+              e.target.value,
+              value.dispatch,
+              value.formState
+            )
+          }
+          onBlur={(e) =>
+            value.handleFocus(
+              'lastProject',
+              e.target.value,
+              value.dispatch,
+              value.formState
+            )
+          }
+        />
+        {value.formState.lastProject.hasError && (
+          <p>{value.formState.lastProject.error}</p>
+        )}
+        {lastProjectRef.current?.value !== '' &&
+          lastProjectRef.current?.value.length <= 600 && (
+            <p>
+              Осталось {600 - lastProjectRef.current?.value.length} символов
+            </p>
           )}
-        </label>
-      </>
-    );
-  }
-}
+        {lastProjectRef.current?.value.length > 600 && (
+          <p>Превышен лимит символов в поле</p>
+        )}
+      </label>
+    </>
+  );
+};
 
 export default Textareas;
