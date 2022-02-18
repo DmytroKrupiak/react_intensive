@@ -1,6 +1,6 @@
-import NewTaskForm from "./components/NewTaskForm/NewTaskForm";
-import TasksList from "./components/TasksList/TasksList";
-import styles from "./App.module.css";
+import NewTaskForm from './components/NewTaskForm/NewTaskForm';
+import TasksList from './components/TasksList/TasksList';
+import styles from './App.module.css';
 
 const App = () => {
   return (

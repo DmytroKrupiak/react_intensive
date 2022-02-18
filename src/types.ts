@@ -1,5 +1,5 @@
-import { AnyAction } from "redux";
-import { ThunkAction } from "redux-thunk";
+import { AnyAction } from 'redux';
+import { ThunkAction } from 'redux-thunk';
 
 export interface ITask {
   readonly id: number;
@@ -11,7 +11,7 @@ export interface ITask {
   readonly creationDate: Date;
 }
 
-export type filters = "all" | "completed" | "favourite" | "notCompleted";
+export type filters = 'all' | 'completed' | 'favourite' | 'notCompleted';
 
 export type TasksState = {
   readonly isLoaded: boolean;

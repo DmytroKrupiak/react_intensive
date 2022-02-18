@@ -1,5 +1,5 @@
-import { GET_TASKS } from "../constants/tasksURL";
-import { ITask } from "../types";
+import { GET_TASKS } from '../constants/tasksURL';
+import { ITask } from '../types';
 
 export const fetchTasks = async () => {
   const tasksData = await fetch(GET_TASKS);
@@ -17,9 +17,9 @@ export const fetchTasks = async () => {
 
 export const postNewTask = async (task: ITask) => {
   await fetch(`${GET_TASKS}`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-type": "application/json; charset=UTF-8",
+      'Content-type': 'application/json; charset=UTF-8',
     },
     body: JSON.stringify({
       id: task.id,
@@ -33,15 +33,15 @@ export const postNewTask = async (task: ITask) => {
 
 export const deleteTask = async (id: number) => {
   await fetch(`${GET_TASKS}/${id}`, {
-    method: "DELETE",
+    method: 'DELETE',
   });
 };
 
 export const updateTask = async (task: ITask) => {
   await fetch(`${GET_TASKS}/${task.id}`, {
-    method: "PUT",
+    method: 'PUT',
     headers: {
-      "Content-type": "application/json; charset=UTF-8",
+      'Content-type': 'application/json; charset=UTF-8',
     },
     body: JSON.stringify({
       id: task.id,
