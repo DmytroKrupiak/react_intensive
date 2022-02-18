@@ -1,0 +1,18 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "completed": false,
+      "favourite": false,
+      "body": "this is work task",
+      "creationDate": 1635334934464
+    },
+    {
+      "id": 2,
+      "completed": false,
+      "favourite": false,
+      "body": "this second work task bigger one",
+      "creationDate": 1635334985000
+    }
+  ]
+}
