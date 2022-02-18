@@ -1,0 +1,1 @@
+export const GET_TASKS: string = 'http://localhost:3000/tasks';
